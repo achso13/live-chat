@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helpers;
 use App\Traits\ApiResponser;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -30,13 +31,12 @@ class AuthController extends Controller
         $validator = $this->validateUser();
 
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), "Register failed", 422);
+            return $this->errorResponse(Helpers::formatErrors($validator), "Register failed", 422);
         }
 
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('images', 'public');
         }
-
 
         $data = [
             'username' => $request->input('username'),
