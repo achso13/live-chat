@@ -34,17 +34,18 @@ class AuthController extends Controller
             return $this->errorResponse(Helpers::formatErrors($validator), "Register failed", 422);
         }
 
-        if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('images', 'public');
-        }
-
         $data = [
             'username' => $request->input('username'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
             'name' => $request->input('name'),
-            'photo' => $path
         ];
+
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('images', 'public');
+            $data['photo'] = $path;
+        }
+
 
         $user = User::create($data);
 
